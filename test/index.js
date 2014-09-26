@@ -213,6 +213,8 @@ describe('integration', function(){
     beforeEach(function(){
       Integration.tag('example-img', '<img src="/{{name}}.png">')
       Integration.tag('example-script', '<script src="http://ajax.googleapis.com/ajax/libs/jquery/{{version}}/jquery.min.js"></script>');
+      Integration.tag('timeout', '<script src="/test/test-integration.js"></script>');
+      Integration.prototype.loaded = Function('return true');
       integration = new Integration();
       spy(integration, 'load');
     });
@@ -230,9 +232,22 @@ describe('integration', function(){
     });
 
     it('should load script', function (done) {
-      integration.load('example-script', { version: '1.11.1' }, function(){
+      integration.load('example-script', { version: '1.11.1' }, function(err){
+        if (err) return done(err);
         var script = integration.load.returns[0];
         assert.equal('http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js', script.src);
+        done();
+      });
+    });
+
+    it('should wait until .loaded() returns true', function(done){
+      Integration.prototype.loaded = Function('return !!window.trk;');
+      integration = new Integration();
+      spy(integration, 'load');
+      assert(null == window.trk);
+      integration.load('timeout', function(err){
+        if (err) return done(err);
+        assert(window.trk);
         done();
       });
     });
