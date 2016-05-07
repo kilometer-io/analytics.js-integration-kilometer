@@ -3,12 +3,11 @@
  * Module dependencies.
  */
 
-var createIntegration = require('../lib');
 var assert = require('assert');
-var spy = require('spy');
-var stub = require('stub');
-var Facade = require('facade');
-var Track = Facade.Track;
+var createIntegration = require('../lib');
+var spy = require('sinon').spy;
+var stub = require('sinon').stub;
+var Track = require('segmentio-facade').Track;
 
 /**
  * Tests.
@@ -227,7 +226,7 @@ describe('integration', function(){
 
     it('should load img', function(done) {
       integration.load('example-img', { name: 'example' }, function(){
-        var img = integration.load.returns[0];
+        var img = integration.load.returnValues[0];
         var proto = window.location.protocol;
         var host = window.location.hostname;
         var port = window.location.port;
@@ -251,7 +250,7 @@ describe('integration', function(){
 
     it('should load script', function(done){
       integration.load('example-script', { version: '1.11.1' }, function(){
-        var script = integration.load.returns[0];
+        var script = integration.load.returnValues[0];
         assert.equal('https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js', script.src);
         done();
       });
@@ -259,7 +258,7 @@ describe('integration', function(){
 
     it('should load iframe', function(done){
       integration.load('example-iframe', function(){
-        var iframe = integration.load.returns[0];
+        var iframe = integration.load.returnValues[0];
         assert.equal('https://jump.omnitarget.com/', iframe.src);
         done();
       });

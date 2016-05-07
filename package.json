@@ -10,13 +10,42 @@
   "scripts": {
     "test": "make test"
   },
-  "dependencies": {},
+  "dependencies": {
+    "@ndhoule/each": "^2.0.1",
+    "@ndhoule/every": "^2.0.1",
+    "@ndhoule/foldl": "^2.0.1",
+    "analytics-events": "^1.2.0",
+    "component-emitter": "^1.2.0",
+    "debug": "^2.2.0",
+    "domify": "^1.4.0",
+    "is": "^3.1.0",
+    "load-iframe": "^1.0.0",
+    "lodash.after": "^3.0.1",
+    "lodash.assign": "^3.2.0",
+    "lodash.bind": "^3.1.0",
+    "lodash.clonedeep": "^3.0.2",
+    "lodash.includes": "^3.1.3",
+    "lodash.noop": "^3.0.0",
+    "next-tick": "^0.2.2",
+    "slug-component": "^1.1.0",
+    "stluafed": "^1.0.0",
+    "to-no-case": "^0.1.3"
+  },
   "devDependencies": {
-    "duo": "0.7.x",
-    "duo-test": "0.2.x",
+    "browserify": "^13.0.0",
     "eslint": "0.x",
     "eslint-config-segment": "^1.0.7",
-    "mocha-phantomjs": "~3.1.5",
-    "phantomjs": "~1.9.2-2"
+    "karma": "^0.13.22",
+    "karma-browserify": "^5.0.4",
+    "karma-chrome-launcher": "^0.2.3",
+    "karma-mocha": "^0.2.2",
+    "karma-phantomjs-launcher": "^1.0.0",
+    "karma-sauce-launcher": "^0.3.1",
+    "karma-spec-reporter": "0.0.26",
+    "mocha": "^2.4.5",
+    "phantomjs-prebuilt": "^2.1.7",
+    "segmentio-facade": "^3.0.0",
+    "sinon": "1.7.3",
+    "watchify": "^3.7.0"
   }
 }
