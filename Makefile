@@ -1,69 +1,77 @@
-#
-# Binaries.
-#
+##
+# Binaries
+##
 
+DEPCHECK := node_modules/.bin/npm-check
 ESLINT := node_modules/.bin/eslint
 KARMA := node_modules/.bin/karma
 
-#
-# Files.
-#
+##
+# Files
+##
 
-SRCS_DIR = lib
-SRCS = $(shell find lib -type f -name "*.js")
-TESTS_DIR = test
-TESTS = test/index.js
+LIBS = index.js
+SUPPORT = $(wildcard karma.conf*.js)
+TESTS = $(shell find test -type f -name "*.js")
+ALL_FILES = $(LIBS) $(TESTS) $(SUPPORT)
 
-#
-# Task arguments.
-#
+##
+# Program options/flags
+##
 
-KARMA_FLAGS ?= \
-	--fail-on-empty-test-suite \
-	--single-run
+# A list of options to pass to Karma
+# Overriding this overwrites all options specified in this file (e.g. BROWSERS)
+KARMA_FLAGS ?=
 
-#
-# Chore tasks.
-#
+# A list of Karma browser launchers to run
+# http://karma-runner.github.io/0.13/config/browsers.html
+BROWSERS ?=
+ifdef BROWSERS
+KARMA_FLAGS += --browsers $(BROWSERS)
+endif
 
-# Install node dependencies.
+##
+# Tasks
+##
+
+# Install node modules.
 node_modules: package.json $(wildcard node_modules/*/package.json)
 	@npm install
 	@touch $@
 
+# Install dependencies.
+install: node_modules
+
 # Remove temporary files and build artifacts.
 clean:
-	@rm -rf *.log
+	rm -rf *.log coverage
 .PHONY: clean
 
 # Remove temporary files, build artifacts, and vendor dependencies.
 distclean: clean
-	@rm -rf node_modules
+	rm -rf node_modules
 .PHONY: distclean
 
-# Lint JavaScript source.
-lint: node_modules
-	@$(ESLINT) $(wildcard lib/*.js test/index.js)
+# Check for stale or missing dependencies.
+check-dependencies:
+	@$(DEPCHECK) --production --no-color --no-emoji
+	@echo
+
+# Lint JavaScript source files.
+lint: install
+	@$(ESLINT) $(ALL_FILES)
 .PHONY: lint
 
-# TODO: Add make fmt
+# Attempt to fix linting errors.
+fmt: install
+	@$(ESLINT) --fix $(ALL_FILES)
+.PHONY: fmt
 
-# Test locally in PhantomJS.
-test-phantom: node_modules
-	@$(KARMA) start $(KARMA_FLAGS) --browsers PhantomJS
-.PHONY: test-phantom
-
-# Test locally in the browser.
-test-browser: node_modules
-	@$(KARMA) start $(KARMA_FLAGS) --browsers Chrome
-.PHONY: test-browser
-
-# Test in Sauce Labs.
-test-sauce: node_modules
-	@echo "TODO: IMPLEMENT ME"
-.PHONY: test-sauce
+# Run unit tests.
+test-unit: install
+	@$(KARMA) start $(KARMA_FLAGS)
 
 # Default test target.
-test: lint test-phantom
+test: lint check-dependencies test-unit
 .PHONY: test
 .DEFAULT_GOAL = test
