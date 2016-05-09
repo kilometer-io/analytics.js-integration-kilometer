@@ -72,6 +72,6 @@ test-unit: install
 	@$(KARMA) start $(KARMA_FLAGS)
 
 # Default test target.
-test: lint check-dependencies test-unit
+test: lint test-unit
 .PHONY: test
 .DEFAULT_GOAL = test
