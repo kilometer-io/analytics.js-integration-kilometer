@@ -10,9 +10,9 @@ KARMA := node_modules/.bin/karma
 # Files
 ##
 
-LIBS = index.js
-SUPPORT = $(wildcard karma.conf*.js)
+LIBS = $(shell find lib -type f -name "*.js")
 TESTS = $(shell find test -type f -name "*.js")
+SUPPORT = $(wildcard karma.conf*.js)
 ALL_FILES = $(LIBS) $(TESTS) $(SUPPORT)
 
 ##
