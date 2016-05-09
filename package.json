@@ -13,6 +13,7 @@
   },
   "dependencies": {
     "@ndhoule/after": "^1.0.0",
+    "@ndhoule/clone": "^1.0.0",
     "@ndhoule/defaults": "^2.0.1",
     "@ndhoule/each": "^2.0.1",
     "@ndhoule/every": "^2.0.1",
@@ -23,10 +24,9 @@
     "component-emitter": "^1.2.0",
     "debug": "^2.2.0",
     "domify": "^1.4.0",
+    "function-bind": "^1.1.0",
     "is": "^3.1.0",
     "load-iframe": "^1.0.0",
-    "lodash.bind": "^3.1.0",
-    "lodash.clonedeep": "^3.0.2",
     "next-tick": "^0.2.2",
     "slug-component": "^1.1.0",
     "to-no-case": "^0.1.3"
