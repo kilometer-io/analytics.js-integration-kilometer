@@ -19,6 +19,7 @@ module.exports = function(config) {
 
     browserify: {
       debug: true,
+      exclude: ['util'],
       transform: [
         [
           'browserify-istanbul',
