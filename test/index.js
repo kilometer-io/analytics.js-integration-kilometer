@@ -4,7 +4,7 @@
  * Module dependencies.
  */
 
-var assert = require('assert');
+var assert = require('proclaim');
 var createIntegration = require('../lib');
 var spy = require('sinon').spy;
 var stub = require('sinon').stub;

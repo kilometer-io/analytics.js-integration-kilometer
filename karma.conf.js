@@ -19,7 +19,10 @@ module.exports = function(config) {
 
     browserify: {
       debug: true,
-      exclude: ['util'],
+      exclude: [
+        'assert',
+        'util'
+      ],
       transform: [
         [
           'browserify-istanbul',

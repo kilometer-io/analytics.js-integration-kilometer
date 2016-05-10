@@ -28,6 +28,7 @@
     "is": "^3.1.0",
     "load-iframe": "^1.0.0",
     "next-tick": "^0.2.2",
+    "proclaim": "^3.4.1",
     "slug-component": "^1.1.0",
     "to-no-case": "^0.1.3"
   },
