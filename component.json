@@ -1,8 +1,8 @@
 {
   "name": "analytics.js-integration-kilometer",
-  "repo": "segment-integrations/analytics.js-integration-kilometer",
-  "description": "The Kilometer analytics.js integration.",
-  "version": "1.5.0",
+  "repo": "kilometer-io/analytics.js-integration-kilometer",
+  "description": "The Kilometer.io analytics.js integration.",
+  "version": "1.0.5",
   "license": "MIT",
   "main": "lib/index.js",
   "dependencies": {

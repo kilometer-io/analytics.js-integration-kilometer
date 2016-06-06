@@ -3,7 +3,6 @@
 build.js
 components
 node_modules
-test/pid.txt
 
 # Build output directory - where the built artifact is placed
 out/*
