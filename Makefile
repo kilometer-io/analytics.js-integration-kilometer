@@ -11,15 +11,22 @@ ESLINT = node_modules/.bin/eslint
 #
 
 SRCS_DIR = lib
-SRCS = $(shell find lib -type f -name "*.js")
+SRCS = $(shell find $(SRCS_DIR) -type f -name "*.js")
 TESTS_DIR = test
-TESTS = test/index.js
+TESTS = $(shell find $(TESTS_DIR) -type f -name '*.test.js')
 
 #
-# Task arguments.
+# Task config.
 #
 
-browser ?= chrome
+BROWSER ?= chrome
+
+PORT ?= 0
+
+DUOT_ARGS = \
+	--reporter spec \
+	--port $(PORT) \
+	--commands "make build"
 
 #
 # Chore tasks.
@@ -29,18 +36,14 @@ browser ?= chrome
 node_modules: package.json $(wildcard node_modules/*/package.json)
 	@npm install
 
-# Create the build directory.
-build:
-	@mkdir -p build
-
 # Remove temporary files and build artifacts.
 clean:
-	@rm -rf *.log build
+	rm -rf build.js
 .PHONY: clean
 
 # Remove temporary files, build artifacts, and vendor dependencies.
-distclean:
-	@rm -rf components node_modules
+distclean: clean
+	rm -rf components node_modules
 .PHONY: distclean
 
 #
@@ -48,9 +51,12 @@ distclean:
 #
 
 # Build all integrations, tests, and dependencies together for testing.
-build/build.js: node_modules component.json $(SRCS) $(TESTS) | build
-	@$(DUO) --development test/index.js > $@
-.DEFAULT_GOAL = build/build.js
+build.js: node_modules component.json $(SRCS) $(TESTS)
+	@$(DUO) --stdout --development $(TESTS) > $@
+
+# Build shortcut.
+build: build.js
+.DEFAULT_GOAL = build
 
 #
 # Test tasks.
@@ -58,20 +64,30 @@ build/build.js: node_modules component.json $(SRCS) $(TESTS) | build
 
 # Lint JavaScript source.
 lint: node_modules
-	@$(ESLINT) $(wildcard lib/*.js test/index.js)
+	@$(ESLINT) $(SRCS) $(TESTS)
+.PHONY: lint
 
 # Test locally in PhantomJS.
-test: node_modules lint build/build.js
-	@$(DUOT) phantomjs
+test-phantomjs: node_modules build.js
+	@$(DUOT) phantomjs $(TESTS_DIR) args: \
+		--path node_modules/.bin/phantomjs
 .PHONY: test
 
 # Test locally in the browser.
-test-browser: node_modules lint build/build.js
-	@$(DUOT) browser --commands "make build/build.js"
+test-browser: node_modules build.js
+	@$(DUOT) browser --commands "make build" $(TESTS_DIR)
 .PHONY: test-browser
 
 # Test in Sauce Labs. Note that you must set the SAUCE_USERNAME and
 # SAUCE_ACCESS_KEY environment variables using your Sauce Labs credentials.
-test-sauce: node_modules build/build.js
-	@$(DUOT) saucelabs -b $(browser)
+test-sauce: node_modules build.js
+	@$(DUOT) saucelabs $(TESTS_DIR) \
+		--name analytics.js-integrations \
+		--browsers $(BROWSER) \
+		--user $(SAUCE_USERNAME) \
+		--key $(SAUCE_ACCESS_KEY)
 .PHONY: test-sauce
+
+# Test shortcut.
+test: lint test-phantomjs
+.PHONY: test

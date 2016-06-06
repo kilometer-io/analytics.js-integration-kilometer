@@ -1,4 +1,17 @@
-node_modules
+*.log
+.DS_Store
+build.js
 components
-build
+node_modules
 test/pid.txt
+
+# Build output directory - where the built artifact is placed
+out/*
+
+*.iml
+venv
+
+.vagrant
+.vagrant/*
+
+.idea
