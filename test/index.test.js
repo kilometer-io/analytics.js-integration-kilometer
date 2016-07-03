@@ -1,41 +1,44 @@
-var Analytics = require('analytics.js-core').constructor;
-var each = require('each');
-var integration = require('analytics.js-integration');
-var sandbox = require('clear-env');
-var tester = require('analytics.js-integration-tester');
-var Kilometer = require('../lib/');
+'use strict';
 
-describe('Kilometer', function() {
-  var kilometer;
+var Analytics = require('@segment/analytics.js-core').constructor;
+var each = require('component-each');
+var integration = require('@segment/analytics.js-integration');
+var sandbox = require('@segment/clear-env');
+var tester = require('@segment/analytics.js-integration-tester');
+var KilometerIntegration = require('../lib/');
+
+describe('Kilometer.io', function() {
+  var kilometerIntegration;
   var analytics;
   var options = {
-    appId: 'abcdefghi1234567890'
+    app_id: 'abcdefghi1234567890'
   };
 
   beforeEach(function() {
     analytics = new Analytics();
-    kilometer = new Kilometer(options);
-    analytics.use(kilometer);
+    kilometerIntegration = new KilometerIntegration(options);
+    analytics.use(KilometerIntegration);
     analytics.use(tester);
-    analytics.add(kilometer);
+    analytics.add(kilometerIntegration);
   });
 
   afterEach(function() {
     analytics.restore();
     analytics.reset();
-    kilometer.reset();
+    kilometerIntegration.reset();
     sandbox();
   });
 
   it('should have the right settings', function() {
-    analytics.compare(kilometer, integration('Kilometer')
-        .global('Kilometer')
-        .option('app_id', ''));
+    analytics.compare(KilometerIntegration, integration('Kilometer.io')
+        .global('KilometerIntegration')
+        .option('app_id', '')
+        .tag('<script src="//static.kilometer.io/js/events-api-client2.js">'));
   });
 
   describe('before loading', function() {
     beforeEach(function() {
-      analytics.stub(kilometer, 'load');
+      analytics.stub(KilometerIntegration, 'load');
     });
 
     describe('#initialize', function() {
@@ -45,7 +48,20 @@ describe('Kilometer', function() {
         analytics.assert(window.Kilometer);
       });
 
+
+      it('should stub window.kilometerIntegration with the right methods', function() {
+        // transmitEvent identify addUser setUserProperties increaseUserProperty decreaseUserProperty
+        var methods = ['track', 'initialize', 'identify', 'loaded'];
+        analytics.assert(!window.KilometerIntegration);
+        analytics.initialize();
+        each(methods, function(method) {
+          analytics.assert(window.KilometerIntegration[method]);
+        });
+      });
+
+
       it('should stub window.Kilometer with the right methods', function() {
+        // transmitEvent identify addUser setUserProperties increaseUserProperty decreaseUserProperty
         var methods = ['transmitEvent', 'identify', 'addUser', 'setUserProperties', 'increaseUserProperty', 'decreaseUserProperty'];
         analytics.assert(!window.Kilometer);
         analytics.initialize();
@@ -54,22 +70,22 @@ describe('Kilometer', function() {
         });
       });
 
-      it('should set window.heap.appid', function() {
-        analytics.assert(!window.heap);
+      it('should set window.Kilometer.app_id', function() {
+        analytics.assert(!window.Kilometer);
         analytics.initialize();
-        analytics.assert(window.heap.appid === options.appId);
+        analytics.assert(window.Kilometer.app_id === options.app_id);
       });
 
       it('should call #load', function() {
         analytics.initialize();
-        analytics.called(heap.load);
+        analytics.called(kilometerIntegration.load);
       });
     });
   });
 
   describe('loading', function() {
     it('should load', function(done) {
-      analytics.load(heap, done);
+      analytics.load(kilometerIntegration, done);
     });
   });
 
@@ -82,29 +98,31 @@ describe('Kilometer', function() {
 
     describe('#identify', function() {
       beforeEach(function() {
-        analytics.stub(window.heap, 'identify');
-        analytics.stub(window.heap, 'addUserProperties');
+        analytics.stub(window.Kilometer, 'identify');
+        analytics.stub(window.Kilometer, 'setUserProperties');
       });
 
       it('should send traits', function() {
         analytics.identify({ trait: true, number: 1 });
-        analytics.called(window.heap.addUserProperties, { trait: true, number: 1 });
+        analytics.called(window.Kilometer.setUserProperties, { trait: true, number: 1 });
       });
 
+      /*
       it('should alias email to _email', function() {
         analytics.identify({ trait: true, email: 'email@email.org' });
-        analytics.called(window.heap.addUserProperties, { trait: true, _email: 'email@email.org' });
+        analytics.called(window.Kilometer.setUserProperties, { trait: true, _email: 'email@email.org' });
       });
+      */
 
       it('should send id as handle', function() {
         analytics.identify('id');
-        analytics.called(window.heap.identify, 'id');
+        analytics.called(window.Kilometer.identify, 'id');
       });
 
       it('should send id as handle and traits', function() {
         analytics.identify('id', { trait: 'trait' });
-        analytics.called(window.heap.identify, 'id');
-        analytics.called(window.heap.addUserProperties, { id: 'id', trait: 'trait' });
+        analytics.called(window.Kilometer.identify, 'id');
+        analytics.called(window.Kilometer.setUserProperties, { trait: 'trait' });
       });
 
       it('should flatten nested objects and arrays', function() {
@@ -122,11 +140,9 @@ describe('Kilometer', function() {
             ]
           }
         });
-        analytics.called(window.heap.identify, 'id');
-        analytics.called(window.heap.addUserProperties, {
-          id: 'id',
-          _email: 'teemo@teemo.com',
-          property: 3,
+        analytics.called(window.Kilometer.identify, 'id');
+        analytics.called(window.Kilometer.setUserProperties, {
+          custom_properties: 3,
           'foo.bar.hello': 'teemo',
           'foo.cheese': '[\"1\",2,\"cheers\"]',
           'foo.products': '[{\"A\":\"Jello\"},{\"B\":\"Peanut\"}]'
@@ -136,24 +152,24 @@ describe('Kilometer', function() {
       it('should send date traits as ISOStrings', function() {
         var date = new Date('2016');
         analytics.identify('id', { date: date });
-        analytics.called(window.heap.identify, 'id');
-        analytics.called(window.heap.addUserProperties, { id: 'id', date: '2016-01-01T00:00:00.000Z' });
+        analytics.called(window.Kilometer.identify, 'id');
+        analytics.called(window.Kilometer.setUserProperties, { date: '2016-01-01T00:00:00.000Z' });
       });
     });
 
     describe('#track', function() {
       beforeEach(function() {
-        analytics.stub(window.heap, 'track');
+        analytics.stub(window.kilometerIntegration, 'track');
       });
 
       it('should send an event', function() {
         analytics.track('event');
-        analytics.called(window.heap.track, 'event');
+        analytics.called(window.kilometerIntegration.track, 'event');
       });
 
       it('should send an event and properties', function() {
         analytics.track('event', { property: true });
-        analytics.called(window.heap.track, 'event', { property: true });
+        analytics.called(window.kilometerIntegration.track, 'event', { property: true });
       });
 
       it('should flatten nested objects and arrays', function() {
@@ -170,7 +186,7 @@ describe('Kilometer', function() {
             ]
           }
         });
-        analytics.called(window.heap.track, 'event', {
+        analytics.called(window.kilometerIntegration.track, 'event', {
           property: 3,
           'foo.bar.hello': 'teemo',
           'foo.cheese': '[\"1\",2,\"cheers\"]',
