@@ -1,4 +1,4 @@
-# analytics.js-integration-customerio [![Build Status][ci-badge]][ci-link]
+# analytics.js-integration-kilometer [![Build Status][ci-badge]][ci-link]
 
 Kilometer.io integration for [Analytics.js][].
 
