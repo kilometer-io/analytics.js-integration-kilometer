@@ -3,6 +3,7 @@
 build.js
 components
 node_modules
+coverage
 
 # Build output directory - where the built artifact is placed
 out/*
