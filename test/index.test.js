@@ -11,7 +11,7 @@ describe('Kilometer.io', function() {
   var kilometerIntegration;
   var analytics;
   var options = {
-    app_id: 'abcdefghi1234567890',
+    app_id: 'fakeId',
     endPoint: 'events.stage.kilometer.io',
     webUrl: 'app.stage.kilometer.io/events/save/'
   };
@@ -38,7 +38,7 @@ describe('Kilometer.io', function() {
     analytics.compare(KilometerIntegration, integration('Kilometer.io')
         .global('kilometerIntegration')
         .option('app_id', '')
-        .tag('<script src="//s3.amazonaws.com/kilometer.public/events-api-client3.js">'));
+        .tag('<script src="//static.kilometer.io/staging/js/events-api-client2.js">'));
   });
 
   describe('before loading', function() {
