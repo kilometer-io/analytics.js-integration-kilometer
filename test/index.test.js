@@ -27,11 +27,9 @@ describe('Kilometer.io', function() {
 
   afterEach(function() {
     console.log('Entered test Kilometer.io > afterEach()');
-    analytics = null;
-    kilometerIntegration = null;
-    // analytics.restore();
-    // analytics.reset();
-    // kilometerIntegration.reset();
+    analytics.restore();
+    analytics.reset();
+    kilometerIntegration.reset();
     sandbox();
   });
 
@@ -164,17 +162,25 @@ describe('Kilometer.io', function() {
 
     afterEach(function() {
       console.log('Entered test Kilometer.io > after loading > afterEach()');
-      if (typeof window.Kilometer !== 'undefined' || window.Kilometer !== null) {
-        window.Kilometer = null;
-      }
+      //  if (typeof window.Kilometer !== 'undefined' || window.Kilometer !== null) {
+      //  window.Kilometer = null;
+      // }
+      // sandbox();
     });
 
 
     describe('#identify', function() {
       beforeEach(function() {
+        sandbox();
         analytics.stub(window.Kilometer, 'identify');
         analytics.stub(window.Kilometer, 'setUserProperties');
       });
+
+      // afterEach(function() {
+      //  sandbox();
+      //  analytics = null;
+      //  window.Kilometer = null;
+      // });
 
       it('if no user id is specified - do not do anything', function() {
         analytics.identify({ trait: true, number: 1 });
@@ -183,18 +189,19 @@ describe('Kilometer.io', function() {
       });
 
       it('should send traits', function() {
+        sandbox();
         analytics.identify('vasya2', { trait: true, number: 1 });
         analytics.called(window.Kilometer.setUserProperties, { trait: true, number: 1 });
       });
 
 
-      /*
       it('should send id as handle', function() {
         analytics.identify('id');
         analytics.called(window.Kilometer.identify, 'id');
       });
 
       it('should send id as handle and traits', function() {
+        sandbox();
         analytics.identify('id', { trait: 'trait' });
         analytics.called(window.Kilometer.identify, 'id');
         analytics.called(window.Kilometer.setUserProperties, { trait: 'trait' });
@@ -217,7 +224,8 @@ describe('Kilometer.io', function() {
         });
         analytics.called(window.Kilometer.identify, 'id');
         analytics.called(window.Kilometer.setUserProperties, {
-          custom_properties: 3,
+          email: 'teemo@teemo.com',
+          property: 3,
           'foo.bar.hello': 'teemo',
           'foo.cheese': '[\"1\",2,\"cheers\"]',
           'foo.products': '[{\"A\":\"Jello\"},{\"B\":\"Peanut\"}]'
@@ -230,10 +238,9 @@ describe('Kilometer.io', function() {
         analytics.called(window.Kilometer.identify, 'id');
         analytics.called(window.Kilometer.setUserProperties, { date: '2016-01-01T00:00:00.000Z' });
       });
-      */
     });
 
-    /*
+
     describe('#track', function() {
       beforeEach(function() {
         analytics.stub(window.Kilometer, 'transmitEvent');
@@ -271,6 +278,5 @@ describe('Kilometer.io', function() {
         });
       });
     });
-    */
   });
 });
