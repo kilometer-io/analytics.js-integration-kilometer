@@ -10,9 +10,9 @@ dependencies:
   post:
     - wget https://saucelabs.com/downloads/sc-latest-linux.tar.gz
     - tar -xzf sc-latest-linux.tar.gz
-  pre:
-    - npm config set "//registry.npmjs.org/:_authToken" $NPM_AUTH
-    - npm -g install codecov
+#  pre:
+#    - npm config set "//registry.npmjs.org/:_authToken" $NPM_AUTH
+#    - npm -g install codecov
   override:
     - make install
 
@@ -20,9 +20,9 @@ test:
   override:
     - make test
 # XXX(ndhoule): Coverage disabled while supporting IE7/8, see karma.conf.js
-   post:
-     - cp -R coverage $CIRCLE_ARTIFACTS/
-     - codecov
+#   post:
+#     - cp -R coverage $CIRCLE_ARTIFACTS/
+#     - codecov
 
 deployment:
   publish:
