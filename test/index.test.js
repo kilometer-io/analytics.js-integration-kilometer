@@ -62,19 +62,6 @@ describe('Kilometer.io', function() {
         analytics.assert(window.Kilometer);
       });
 
-      /*
-      it('should stub window.kilometerIntegration with the right methods', function() {
-        console.log('Entered test Kilometer.io > before loading > #initialize > it(should stub window.kilometerIntegration with the right methods)');
-        // transmitEvent identify addUser setUserProperties increaseUserProperty decreaseUserProperty
-        var methods = ['track', 'initialize', 'identify', 'loaded'];
-        analytics.assert(!window.kilometerIntegration);
-        analytics.initialize();
-        each(methods, function(method) {
-          analytics.assert(window.kilometerIntegration[method]);
-        });
-      });
-      */
-
       it('should stub window.Kilometer with the right methods', function() {
         console.log('Entered test Kilometer.io > before loading > #initialize > it(should stub window.Kilometer with the right methods)');
         // transmitEvent identify addUser setUserProperties increaseUserProperty decreaseUserProperty
