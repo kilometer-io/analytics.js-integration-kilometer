@@ -278,5 +278,31 @@ describe('Kilometer.io', function() {
         });
       });
     });
+
+    describe('#group', function() {
+      beforeEach(function() {
+        sandbox();
+        analytics.stub(window.Kilometer, 'linkUserToGroup');
+        analytics.stub(window.Kilometer, 'updateGroupProperties');
+      });
+
+      it('if no user id is specified - don\'t link user to group', function() {
+        analytics.group('someGroupId');
+        analytics.didNotCall(window.Kilometer.linkUserToGroup);
+      });
+
+      it('should send traits', function() {
+        sandbox();
+        analytics.group('myGroup', { group_prop_1: true, group_prop_2: 1 });
+        analytics.called(window.Kilometer.updateGroupProperties, 'myGroup', { group_prop_1: true, group_prop_2: 1 });
+      });
+
+
+      it('should try to link an identified user', function() {
+        analytics.identify('RealJeka');
+        analytics.group('newGroup1');
+        analytics.called(window.Kilometer.linkUserToGroup, 'newGroup1', 'RealJeka');
+      });
+    });
   });
 });

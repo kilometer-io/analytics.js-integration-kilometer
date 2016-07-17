@@ -32,7 +32,7 @@ module.exports = function(config) {
     // - PhantomJS
     // - IE (only Windows; has to be installed with `npm install karka-ie-launcher`)
     // browsers: ['Firefox', 'PhantomJS', 'chrome_without_security'],
-    browsers: ['Firefox', 'chrome_without_security', 'PhantomJS'],
+    browsers: ['PhantomJS'],
 
     customLaunchers: {
       chrome_without_security: {
