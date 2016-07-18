@@ -282,6 +282,7 @@ describe('Kilometer.io', function() {
     describe('#group', function() {
       beforeEach(function() {
         sandbox();
+        analytics.stub(window.Kilometer, 'identify');
         analytics.stub(window.Kilometer, 'linkUserToGroup');
         analytics.stub(window.Kilometer, 'updateGroupProperties');
       });
@@ -299,6 +300,7 @@ describe('Kilometer.io', function() {
 
 
       it('should try to link an identified user', function() {
+        sandbox();
         analytics.identify('RealJeka');
         analytics.group('newGroup1');
         analytics.called(window.Kilometer.linkUserToGroup, 'newGroup1', 'RealJeka');
