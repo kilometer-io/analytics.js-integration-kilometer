@@ -11,8 +11,9 @@ describe('Kilometer.io', function() {
   var kilometerIntegration;
   var analytics;
   var options = {
-    app_id: 'fakeId',
+    apiKey: 'fakeId',
     endPoint: 'events.stage.kilometer.io',
+    visualizerSourceUrl: 'static.kilometer.io/staging',
     webUrl: 'app.stage.kilometer.io/events/save/'
   };
 
@@ -37,8 +38,8 @@ describe('Kilometer.io', function() {
     console.log('Entered test Kilometer.io > it(should have the right settings)');
     analytics.compare(KilometerIntegration, integration('Kilometer.io')
         .global('kilometerIntegration')
-        .option('app_id', '')
-        .tag('<script src="//static.kilometer.io/staging/js/events-api-client2.js.js">'));
+        .option('apiKey', '')
+        .tag('<script src="//static.kilometer.io/events-api-client.js">'));
   });
 
   describe('before loading', function() {
@@ -118,7 +119,7 @@ describe('Kilometer.io', function() {
         console.log('Entered test Kilometer.io > before loading > #initialize > it(should set window.Kilometer.app_id)');
         analytics.assert(!window.Kilometer);
         analytics.initialize();
-        analytics.assert(window.Kilometer.app_id === options.app_id);
+        analytics.assert(window.Kilometer.app_id === options.apiKey);
       });
 
       it('should call #load', function() {
