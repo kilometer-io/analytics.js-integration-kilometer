@@ -33,6 +33,20 @@ var customLaunchers = {
     browserName: 'safari',
     version: '9.0'
   },
+  sl_ie_10: {
+    base: 'SauceLabs',
+    browserName: 'internet explorer',
+    version: '10'
+  },
+  sl_ie_11: {
+    base: 'SauceLabs',
+    browserName: 'internet explorer',
+    version: '11'
+  },
+  sl_edge_latest: {
+    base: 'SauceLabs',
+    browserName: 'microsoftedge'
+  }
   /*
   sl_ie_7: {
     base: 'SauceLabs',
@@ -48,22 +62,8 @@ var customLaunchers = {
     base: 'SauceLabs',
     browserName: 'internet explorer',
     version: '9'
-  },
-  */
-  sl_ie_10: {
-    base: 'SauceLabs',
-    browserName: 'internet explorer',
-    version: '10'
-  },
-  sl_ie_11: {
-    base: 'SauceLabs',
-    browserName: 'internet explorer',
-    version: '11'
-  },
-  sl_edge_latest: {
-    base: 'SauceLabs',
-    browserName: 'microsoftedge'
   }
+  */
 };
 
 module.exports = function(config) {
@@ -80,7 +80,8 @@ module.exports = function(config) {
 
     reporters: ['progress', 'junit'],
 
-    browsers: ['PhantomJS'].concat(Object.keys(customLaunchers)),
+    // browsers: ['PhantomJS'].concat(Object.keys(customLaunchers)),
+    browsers: ['PhantomJS'],
 
     customLaunchers: customLaunchers,
 
