@@ -3,6 +3,7 @@
 
 var baseConfig = require('./karma.conf');
 
+/*
 var customLaunchers = {
   sl_chrome_latest: {
     base: 'SauceLabs',
@@ -47,7 +48,6 @@ var customLaunchers = {
     base: 'SauceLabs',
     browserName: 'microsoftedge'
   }
-  /*
   sl_ie_7: {
     base: 'SauceLabs',
     browserName: 'internet explorer',
@@ -63,15 +63,17 @@ var customLaunchers = {
     browserName: 'internet explorer',
     version: '9'
   }
-  */
 };
+*/
 
 module.exports = function(config) {
   baseConfig(config);
 
+  /*
   if (!process.env.SAUCE_USERNAME || !process.env.SAUCE_ACCESS_KEY) {
     throw new Error('SAUCE_USERNAME and SAUCE_ACCESS_KEY environment variables are required but are missing');
   }
+  */
 
   config.set({
     browserDisconnectTolerance: 1,
@@ -83,7 +85,7 @@ module.exports = function(config) {
     // browsers: ['PhantomJS'].concat(Object.keys(customLaunchers)),
     browsers: ['PhantomJS'],
 
-    customLaunchers: customLaunchers,
+    // customLaunchers: customLaunchers,
 
     junitReporter: {
       outputDir: process.env.TEST_REPORTS_DIR,
